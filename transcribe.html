@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Music Transcriber</title>
+  <link rel="stylesheet" href="styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/abcjs@6.2.2/dist/abcjs-basic-min.js"></script>
+</head>
+<body>
+  <header>
+    <h1>Music Transcriber</h1>
+  </header>
+  <main>
+    <section>
+      <h2>Audio Input</h2>
+      <input type="file" id="audioFile" accept="audio/*" />
+      <button id="recordBtn">Record</button>
+      <button id="stopBtn" disabled>Stop</button>
+      <audio id="audioPlayback" controls></audio>
+    </section>
+    <section>
+      <h2>Score</h2>
+      <div id="notation"></div>
+      <textarea id="abcInput" rows="8"></textarea>
+      <div>
+        <button id="renderBtn">Render Score</button>
+        <button id="playBtn">Play Score</button>
+      </div>
+    </section>
+  </main>
+  <script src="transcribe.js"></script>
+</body>
+</html>
