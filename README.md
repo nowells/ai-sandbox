@@ -1,8 +1,12 @@
-# ai-sandbox
+# AI Sandbox
 
-This repository contains a simple static website showcasing stringed instruments often used by folk singers. Open `index.html` in a browser to view the site.
+This repository now includes a practical implementation blueprint for building a **HabitKit-style iOS + macOS app** with **iCloud sync**.
 
-A basic music transcriber demo is available at `transcribe.html`. The demo lets you upload or record audio, experiment with a sample musical score, and play it back. Actual audio-to-score transcription is not implemented.
+## New Guide
+- `docs/HabitSyncAppBlueprint.md`
+  - Recommended Apple-native architecture (SwiftUI + SwiftData + CloudKit)
+  - Sample models and app setup
+  - Streak logic service
+  - Rollout plan and validation checklist
 
-
-After pushes to `main`, a GitHub Actions workflow publishes the site to GitHub Pages. Once the workflow succeeds and Pages is enabled in the repository settings, you can preview the site at `https://<github-username>.github.io/ai-sandbox/`.
+If you want, the next step is generating a full Xcode project scaffold (targets, entitlements checklist, starter SwiftUI screens, and test stubs) directly from this blueprint.
