@@ -1,77 +1,730 @@
 {
   "sourceUrl": "https://eventhub.firstinspires.org/leaderboard/648a05f7-ee85-4744-bdd7-62d4b4f21c3a/87b8c427-18e0-4bb9-bf66-2f26f4b20057",
-  "scrapedAt": "2026-05-01T03:17:22.797Z",
+  "scrapedAt": "2026-05-01T03:23:05.109Z",
   "pageTitle": "FIRST Event Hub",
   "headerText": null,
-  "teamCount": 0,
-  "teams": [],
-  "diagnostics": [
+  "teamCount": 160,
+  "teams": [
     {
-      "url": "https://eventhub.firstinspires.org/config.json",
-      "topKeys": [
-        "REACT_APP_AUTH_DOMAIN",
-        "REACT_APP_AUTH_CLIENT_ID",
-        "REACT_APP_AUTH_REDIRECT_URI",
-        "REACT_APP_AUTH_AUDIENCE",
-        "REACT_APP_GOOGLE_AUTH_REDIRECT_URI",
-        "REACT_APP_API_BASE_URL",
-        "REACT_APP_IS_STAGING_ENV",
-        "REACT_APP_UPLOAD_API_BASE_URL",
-        "REACT_APP_ENVIRONMENT"
-      ],
-      "sampleRowKeys": null,
-      "isArray": false
+      "rank": 1,
+      "score": 545
     },
     {
-      "url": "https://eventhub.firstinspires.org/config.json",
-      "topKeys": [
-        "REACT_APP_AUTH_DOMAIN",
-        "REACT_APP_AUTH_CLIENT_ID",
-        "REACT_APP_AUTH_REDIRECT_URI",
-        "REACT_APP_AUTH_AUDIENCE",
-        "REACT_APP_GOOGLE_AUTH_REDIRECT_URI",
-        "REACT_APP_API_BASE_URL",
-        "REACT_APP_IS_STAGING_ENV",
-        "REACT_APP_UPLOAD_API_BASE_URL",
-        "REACT_APP_ENVIRONMENT"
-      ],
-      "sampleRowKeys": null,
-      "isArray": false
+      "rank": 2,
+      "score": 545
     },
     {
-      "url": "https://o4504610903097344.ingest.sentry.io/api/4504610919874560/envelope/?sentry_key=942bbbb34e544421911312c24d90311c&sentry_version=7",
-      "topKeys": [],
-      "sampleRowKeys": null,
-      "isArray": false
+      "rank": 3,
+      "score": 545
     },
     {
-      "url": "https://o76fno8oxh.execute-api.eu-central-1.amazonaws.com/api/leaderboard/87b8c427-18e0-4bb9-bf66-2f26f4b20057/rankings",
-      "topKeys": [
-        "jsonapi",
-        "data"
-      ],
-      "sampleRowKeys": null,
-      "isArray": false
+      "rank": 4,
+      "score": 545
     },
     {
-      "url": "https://o76fno8oxh.execute-api.eu-central-1.amazonaws.com/api/events/648a05f7-ee85-4744-bdd7-62d4b4f21c3a",
-      "topKeys": [
-        "jsonapi",
-        "data",
-        "included"
-      ],
-      "sampleRowKeys": null,
-      "isArray": false
+      "rank": 5,
+      "score": 545
     },
     {
-      "url": "https://o76fno8oxh.execute-api.eu-central-1.amazonaws.com/api/schedules/0f640728-e1cb-441f-b36d-a91057e6486a/public_sponsors",
-      "topKeys": [
-        "jsonapi",
-        "meta",
-        "data"
-      ],
-      "sampleRowKeys": null,
-      "isArray": false
+      "rank": 6,
+      "score": 545
+    },
+    {
+      "rank": 7,
+      "score": 540
+    },
+    {
+      "rank": 8,
+      "score": 535
+    },
+    {
+      "rank": 9,
+      "score": 535
+    },
+    {
+      "rank": 10,
+      "score": 530
+    },
+    {
+      "rank": 11,
+      "score": 530
+    },
+    {
+      "rank": 12,
+      "score": 530
+    },
+    {
+      "rank": 13,
+      "score": 530
+    },
+    {
+      "rank": 14,
+      "score": 530
+    },
+    {
+      "rank": 15,
+      "score": 530
+    },
+    {
+      "rank": 16,
+      "score": 530
+    },
+    {
+      "rank": 17,
+      "score": 530
+    },
+    {
+      "rank": 18,
+      "score": 530
+    },
+    {
+      "rank": 19,
+      "score": 530
+    },
+    {
+      "rank": 20,
+      "score": 525
+    },
+    {
+      "rank": 21,
+      "score": 525
+    },
+    {
+      "rank": 22,
+      "score": 520
+    },
+    {
+      "rank": 23,
+      "score": 515
+    },
+    {
+      "rank": 24,
+      "score": 515
+    },
+    {
+      "rank": 25,
+      "score": 515
+    },
+    {
+      "rank": 26,
+      "score": 515
+    },
+    {
+      "rank": 27,
+      "score": 510
+    },
+    {
+      "rank": 28,
+      "score": 510
+    },
+    {
+      "rank": 29,
+      "score": 510
+    },
+    {
+      "rank": 30,
+      "score": 505
+    },
+    {
+      "rank": 31,
+      "score": 505
+    },
+    {
+      "rank": 32,
+      "score": 505
+    },
+    {
+      "rank": 33,
+      "score": 500
+    },
+    {
+      "rank": 34,
+      "score": 500
+    },
+    {
+      "rank": 35,
+      "score": 500
+    },
+    {
+      "rank": 36,
+      "score": 500
+    },
+    {
+      "rank": 37,
+      "score": 495
+    },
+    {
+      "rank": 38,
+      "score": 495
+    },
+    {
+      "rank": 39,
+      "score": 495
+    },
+    {
+      "rank": 40,
+      "score": 495
+    },
+    {
+      "rank": 41,
+      "score": 495
+    },
+    {
+      "rank": 42,
+      "score": 490
+    },
+    {
+      "rank": 43,
+      "score": 490
+    },
+    {
+      "rank": 44,
+      "score": 490
+    },
+    {
+      "rank": 45,
+      "score": 490
+    },
+    {
+      "rank": 46,
+      "score": 490
+    },
+    {
+      "rank": 47,
+      "score": 485
+    },
+    {
+      "rank": 48,
+      "score": 485
+    },
+    {
+      "rank": 49,
+      "score": 480
+    },
+    {
+      "rank": 50,
+      "score": 480
+    },
+    {
+      "rank": 51,
+      "score": 475
+    },
+    {
+      "rank": 52,
+      "score": 475
+    },
+    {
+      "rank": 53,
+      "score": 470
+    },
+    {
+      "rank": 54,
+      "score": 470
+    },
+    {
+      "rank": 55,
+      "score": 470
+    },
+    {
+      "rank": 56,
+      "score": 465
+    },
+    {
+      "rank": 57,
+      "score": 455
+    },
+    {
+      "rank": 58,
+      "score": 455
+    },
+    {
+      "rank": 59,
+      "score": 455
+    },
+    {
+      "rank": 60,
+      "score": 450
+    },
+    {
+      "rank": 61,
+      "score": 450
+    },
+    {
+      "rank": 62,
+      "score": 445
+    },
+    {
+      "rank": 63,
+      "score": 445
+    },
+    {
+      "rank": 64,
+      "score": 445
+    },
+    {
+      "rank": 65,
+      "score": 445
+    },
+    {
+      "rank": 66,
+      "score": 440
+    },
+    {
+      "rank": 67,
+      "score": 440
+    },
+    {
+      "rank": 68,
+      "score": 440
+    },
+    {
+      "rank": 69,
+      "score": 435
+    },
+    {
+      "rank": 70,
+      "score": 435
+    },
+    {
+      "rank": 71,
+      "score": 430
+    },
+    {
+      "rank": 72,
+      "score": 430
+    },
+    {
+      "rank": 73,
+      "score": 425
+    },
+    {
+      "rank": 74,
+      "score": 425
+    },
+    {
+      "rank": 75,
+      "score": 425
+    },
+    {
+      "rank": 76,
+      "score": 420
+    },
+    {
+      "rank": 77,
+      "score": 420
+    },
+    {
+      "rank": 78,
+      "score": 420
+    },
+    {
+      "rank": 79,
+      "score": 415
+    },
+    {
+      "rank": 80,
+      "score": 415
+    },
+    {
+      "rank": 81,
+      "score": 410
+    },
+    {
+      "rank": 82,
+      "score": 405
+    },
+    {
+      "rank": 83,
+      "score": 405
+    },
+    {
+      "rank": 84,
+      "score": 400
+    },
+    {
+      "rank": 85,
+      "score": 400
+    },
+    {
+      "rank": 86,
+      "score": 395
+    },
+    {
+      "rank": 87,
+      "score": 395
+    },
+    {
+      "rank": 88,
+      "score": 395
+    },
+    {
+      "rank": 89,
+      "score": 390
+    },
+    {
+      "rank": 90,
+      "score": 385
+    },
+    {
+      "rank": 91,
+      "score": 385
+    },
+    {
+      "rank": 92,
+      "score": 385
+    },
+    {
+      "rank": 93,
+      "score": 385
+    },
+    {
+      "rank": 94,
+      "score": 380
+    },
+    {
+      "rank": 95,
+      "score": 380
+    },
+    {
+      "rank": 96,
+      "score": 375
+    },
+    {
+      "rank": 97,
+      "score": 375
+    },
+    {
+      "rank": 98,
+      "score": 375
+    },
+    {
+      "rank": 99,
+      "score": 375
+    },
+    {
+      "rank": 100,
+      "score": 375
+    },
+    {
+      "rank": 101,
+      "score": 370
+    },
+    {
+      "rank": 102,
+      "score": 370
+    },
+    {
+      "rank": 103,
+      "score": 370
+    },
+    {
+      "rank": 104,
+      "score": 365
+    },
+    {
+      "rank": 105,
+      "score": 360
+    },
+    {
+      "rank": 106,
+      "score": 360
+    },
+    {
+      "rank": 107,
+      "score": 355
+    },
+    {
+      "rank": 108,
+      "score": 355
+    },
+    {
+      "rank": 109,
+      "score": 355
+    },
+    {
+      "rank": 110,
+      "score": 350
+    },
+    {
+      "rank": 111,
+      "score": 350
+    },
+    {
+      "rank": 112,
+      "score": 345
+    },
+    {
+      "rank": 113,
+      "score": 340
+    },
+    {
+      "rank": 114,
+      "score": 340
+    },
+    {
+      "rank": 115,
+      "score": 340
+    },
+    {
+      "rank": 116,
+      "score": 335
+    },
+    {
+      "rank": 117,
+      "score": 335
+    },
+    {
+      "rank": 118,
+      "score": 330
+    },
+    {
+      "rank": 119,
+      "score": 330
+    },
+    {
+      "rank": 120,
+      "score": 330
+    },
+    {
+      "rank": 121,
+      "score": 325
+    },
+    {
+      "rank": 122,
+      "score": 325
+    },
+    {
+      "rank": 123,
+      "score": 325
+    },
+    {
+      "rank": 124,
+      "score": 315
+    },
+    {
+      "rank": 125,
+      "score": 315
+    },
+    {
+      "rank": 126,
+      "score": 310
+    },
+    {
+      "rank": 127,
+      "score": 310
+    },
+    {
+      "rank": 128,
+      "score": 305
+    },
+    {
+      "rank": 129,
+      "score": 300
+    },
+    {
+      "rank": 130,
+      "score": 300
+    },
+    {
+      "rank": 131,
+      "score": 295
+    },
+    {
+      "rank": 132,
+      "score": 285
+    },
+    {
+      "rank": 133,
+      "score": 285
+    },
+    {
+      "rank": 134,
+      "score": 275
+    },
+    {
+      "rank": 135,
+      "score": 275
+    },
+    {
+      "rank": 136,
+      "score": 275
+    },
+    {
+      "rank": 137,
+      "score": 270
+    },
+    {
+      "rank": 138,
+      "score": 265
+    },
+    {
+      "rank": 139,
+      "score": 265
+    },
+    {
+      "rank": 140,
+      "score": 255
+    },
+    {
+      "rank": 141,
+      "score": 255
+    },
+    {
+      "rank": 142,
+      "score": 255
+    },
+    {
+      "rank": 143,
+      "score": 255
+    },
+    {
+      "rank": 144,
+      "score": 255
+    },
+    {
+      "rank": 145,
+      "score": 240
+    },
+    {
+      "rank": 146,
+      "score": 240
+    },
+    {
+      "rank": 147,
+      "score": 235
+    },
+    {
+      "rank": 148,
+      "score": 230
+    },
+    {
+      "rank": 149,
+      "score": 230
+    },
+    {
+      "rank": 150,
+      "score": 225
+    },
+    {
+      "rank": 151,
+      "score": 225
+    },
+    {
+      "rank": 152,
+      "score": 225
+    },
+    {
+      "rank": 153,
+      "score": 215
+    },
+    {
+      "rank": 154,
+      "score": 215
+    },
+    {
+      "rank": 155,
+      "score": 215
+    },
+    {
+      "rank": 156,
+      "score": 205
+    },
+    {
+      "rank": 157,
+      "score": 205
+    },
+    {
+      "rank": 158,
+      "score": 200
+    },
+    {
+      "rank": 159,
+      "score": 200
+    },
+    {
+      "rank": 160,
+      "score": 180
     }
-  ]
+  ],
+  "diagnostics": {
+    "capturedResponses": [
+      {
+        "url": "https://eventhub.firstinspires.org/config.json",
+        "topKeys": [
+          "REACT_APP_AUTH_DOMAIN",
+          "REACT_APP_AUTH_CLIENT_ID",
+          "REACT_APP_AUTH_REDIRECT_URI",
+          "REACT_APP_AUTH_AUDIENCE",
+          "REACT_APP_GOOGLE_AUTH_REDIRECT_URI",
+          "REACT_APP_API_BASE_URL",
+          "REACT_APP_IS_STAGING_ENV",
+          "REACT_APP_UPLOAD_API_BASE_URL",
+          "REACT_APP_ENVIRONMENT"
+        ],
+        "sampleRowKeys": null,
+        "isArray": false
+      },
+      {
+        "url": "https://o4504610903097344.ingest.sentry.io/api/4504610919874560/envelope/?sentry_key=942bbbb34e544421911312c24d90311c&sentry_version=7",
+        "topKeys": [],
+        "sampleRowKeys": null,
+        "isArray": false
+      },
+      {
+        "url": "https://eventhub.firstinspires.org/config.json",
+        "topKeys": [
+          "REACT_APP_AUTH_DOMAIN",
+          "REACT_APP_AUTH_CLIENT_ID",
+          "REACT_APP_AUTH_REDIRECT_URI",
+          "REACT_APP_AUTH_AUDIENCE",
+          "REACT_APP_GOOGLE_AUTH_REDIRECT_URI",
+          "REACT_APP_API_BASE_URL",
+          "REACT_APP_IS_STAGING_ENV",
+          "REACT_APP_UPLOAD_API_BASE_URL",
+          "REACT_APP_ENVIRONMENT"
+        ],
+        "sampleRowKeys": null,
+        "isArray": false
+      },
+      {
+        "url": "https://o4504610903097344.ingest.sentry.io/api/4504610919874560/envelope/?sentry_key=942bbbb34e544421911312c24d90311c&sentry_version=7",
+        "topKeys": [
+          "id"
+        ],
+        "sampleRowKeys": null,
+        "isArray": false
+      },
+      {
+        "url": "https://o76fno8oxh.execute-api.eu-central-1.amazonaws.com/api/leaderboard/87b8c427-18e0-4bb9-bf66-2f26f4b20057/rankings",
+        "topKeys": [
+          "jsonapi",
+          "data"
+        ],
+        "sampleRowKeys": null,
+        "isArray": false
+      },
+      {
+        "url": "https://o76fno8oxh.execute-api.eu-central-1.amazonaws.com/api/events/648a05f7-ee85-4744-bdd7-62d4b4f21c3a",
+        "topKeys": [
+          "jsonapi",
+          "data",
+          "included"
+        ],
+        "sampleRowKeys": null,
+        "isArray": false
+      },
+      {
+        "url": "https://o76fno8oxh.execute-api.eu-central-1.amazonaws.com/api/schedules/0f640728-e1cb-441f-b36d-a91057e6486a/public_sponsors",
+        "topKeys": [
+          "jsonapi",
+          "meta",
+          "data"
+        ],
+        "sampleRowKeys": null,
+        "isArray": false
+      }
+    ],
+    "jsonApiRowsFound": 160,
+    "teamIndexSize": 320
+  }
 }
