@@ -32,7 +32,13 @@ the scrape run in a visible browser.
 
 ## Running in CI
 
-The workflow at `.github/workflows/leaderboard-report.yml` runs on push/PR
-touching this directory, on a weekly schedule, and on manual dispatch. It
-uploads `leaderboard-report.pdf`, the HTML, the merged JSON, and the raw
-network captures as a single `leaderboard-report` artifact on the workflow run.
+The workflow at `.github/workflows/leaderboard-report.yml` runs on push to
+`main`, on PRs touching this directory, on a weekly schedule, and on manual
+dispatch. Behavior depends on the trigger:
+
+- **Pull requests:** the freshly built `leaderboard-report.pdf`, `report.html`,
+  and `leaderboard.json` are committed back to the PR branch under `reports/`
+  with a `[skip ci]` commit message, and a sticky comment is posted/updated on
+  the PR with a direct link to the PDF (so it opens with one tap on mobile).
+- **Push to main / schedule / dispatch:** the same files are uploaded as the
+  `leaderboard-report` workflow artifact.

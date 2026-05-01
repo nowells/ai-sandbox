@@ -37,28 +37,59 @@ function safeFilename(url) {
   return url.replace(/[^a-z0-9]+/gi, '_').slice(0, 180);
 }
 
+const TEAM_KEYS = new Set([
+  'teamnumber', 'team_number', 'teamid', 'team_id', 'teamname', 'team_name',
+  'teamnickname', 'team_nickname', 'nickname', 'number',
+]);
+const SCORE_KEYS = new Set([
+  'score', 'highscore', 'high_score', 'highestscore', 'highest_score',
+  'totalscore', 'total_score', 'points', 'pointsscored', 'matchscore', 'match_score',
+]);
+const NESTED_TEAM_KEYS = new Set([
+  'team', 'teaminfo', 'team_info', 'teamprofile', 'team_profile',
+  'profile', 'teamdetails', 'team_details',
+]);
+
+function lcKeys(obj) {
+  return Object.keys(obj).map((k) => k.toLowerCase());
+}
+
+function hasAnyKey(obj, set) {
+  for (const k of lcKeys(obj)) if (set.has(k)) return true;
+  return false;
+}
+
 // Walk an arbitrary JSON tree and yield every object that "looks like" a
 // leaderboard row. eventhub's payload shape isn't documented publicly, so
-// we identify rows heuristically: an object with a numeric score-ish field
-// plus a team identifier.
+// we identify rows heuristically: an object that exposes both a score-ish
+// field and a team identifier — possibly via a nested team object.
 function* findLeaderboardRows(node) {
   if (!node || typeof node !== 'object') return;
   if (Array.isArray(node)) {
     for (const item of node) yield* findLeaderboardRows(item);
     return;
   }
-  const keys = Object.keys(node);
-  const lower = keys.map((k) => k.toLowerCase());
-  const hasTeam = lower.some((k) =>
-    ['teamnumber', 'team_number', 'teamid', 'team_id', 'teamname', 'team_name', 'team'].includes(k),
-  );
-  const hasScore = lower.some((k) =>
-    ['score', 'highscore', 'high_score', 'totalscore', 'total_score', 'points'].includes(k),
-  );
-  if (hasTeam && hasScore) {
-    yield node;
+
+  const hasScore = hasAnyKey(node, SCORE_KEYS);
+  let hasTeam = hasAnyKey(node, TEAM_KEYS);
+
+  // A row can also reach the team identifier via a nested object (e.g.
+  // `{rank, highScore, team: {teamNumber, teamName, country}}`). Only count
+  // it as nested-team if that sub-object itself exposes a team key.
+  if (!hasTeam) {
+    for (const k of Object.keys(node)) {
+      if (!NESTED_TEAM_KEYS.has(k.toLowerCase())) continue;
+      const v = node[k];
+      if (v && typeof v === 'object' && !Array.isArray(v) && hasAnyKey(v, TEAM_KEYS)) {
+        hasTeam = true;
+        break;
+      }
+    }
   }
-  for (const k of keys) yield* findLeaderboardRows(node[k]);
+
+  if (hasTeam && hasScore) yield node;
+
+  for (const k of Object.keys(node)) yield* findLeaderboardRows(node[k]);
 }
 
 function pick(obj, candidates) {
@@ -72,18 +103,38 @@ function pick(obj, candidates) {
   return undefined;
 }
 
+// Flatten any sub-objects that look like a team profile into the row, so
+// downstream picks can address fields like `country` or `teamName` even
+// when the source payload nests them under `team` / `teamProfile` / etc.
+// Outer keys win on conflict — the leaderboard row's rank/score should not
+// be overwritten by the nested team's data.
+function flattenTeamObjects(raw) {
+  let merged = { ...raw };
+  for (const key of Object.keys(raw)) {
+    const v = raw[key];
+    if (!v || typeof v !== 'object' || Array.isArray(v)) continue;
+    if (!NESTED_TEAM_KEYS.has(key.toLowerCase())) continue;
+    merged = { ...v, ...merged };
+  }
+  return merged;
+}
+
 function normalizeRow(raw) {
-  const team = {
-    rank: pick(raw, ['rank', 'place', 'position']),
-    teamNumber: pick(raw, ['teamNumber', 'team_number', 'number']),
-    teamName: pick(raw, ['teamName', 'team_name', 'name', 'nickname']),
-    score: pick(raw, ['highScore', 'high_score', 'score', 'totalScore', 'total_score', 'points']),
-    country: pick(raw, ['country', 'countryName', 'country_name', 'countryCode', 'country_code']),
-    stateProv: pick(raw, ['stateProv', 'state', 'province', 'region', 'stateProvince']),
-    city: pick(raw, ['city']),
-    rookieYear: pick(raw, ['rookieYear', 'rookie_year', 'rookieyear', 'firstYear']),
+  const r = flattenTeamObjects(raw);
+  return {
+    rank: pick(r, ['rank', 'place', 'position', 'standing']),
+    teamNumber: pick(r, ['teamNumber', 'team_number', 'number', 'teamId', 'team_id']),
+    teamName: pick(r, ['teamNickname', 'team_nickname', 'nickname', 'teamName', 'team_name', 'name']),
+    score: pick(r, [
+      'highScore', 'high_score', 'highestScore', 'highest_score',
+      'score', 'totalScore', 'total_score', 'points', 'pointsScored',
+      'matchScore', 'match_score',
+    ]),
+    country: pick(r, ['country', 'countryName', 'country_name', 'countryCode', 'country_code']),
+    stateProv: pick(r, ['stateProv', 'state', 'province', 'region', 'stateProvince', 'state_prov']),
+    city: pick(r, ['city']),
+    rookieYear: pick(r, ['rookieYear', 'rookie_year', 'rookieyear', 'firstYear', 'first_year']),
   };
-  return team;
 }
 
 // DOM fallback: scrape whatever rows are visible on the page. Less rich than
@@ -185,6 +236,25 @@ async function main() {
     if (t.rank == null) t.rank = i + 1;
   });
 
+  // Diagnostics: top-level keys (and one sample row's keys, if available) for
+  // each captured JSON response. Surfaces the schema in CI logs so a future
+  // shape change is obvious without having to download the full network/ dir.
+  const diagnostics = captured.map(({ url, body }) => {
+    const topKeys = body && typeof body === 'object' && !Array.isArray(body) ? Object.keys(body) : null;
+    let sampleRowKeys = null;
+    const firstRow = (() => {
+      for (const r of findLeaderboardRows(body)) return r;
+      return null;
+    })();
+    if (firstRow) sampleRowKeys = Object.keys(firstRow);
+    return { url, topKeys, sampleRowKeys, isArray: Array.isArray(body) };
+  });
+  for (const d of diagnostics) {
+    console.log(`  ${d.url}`);
+    console.log(`    top-level keys: ${JSON.stringify(d.topKeys ?? (d.isArray ? '[array]' : 'n/a'))}`);
+    if (d.sampleRowKeys) console.log(`    sample row keys: ${JSON.stringify(d.sampleRowKeys)}`);
+  }
+
   const out = {
     sourceUrl: LEADERBOARD_URL,
     scrapedAt: new Date().toISOString(),
@@ -192,6 +262,7 @@ async function main() {
     headerText,
     teamCount: teams.length,
     teams,
+    diagnostics,
   };
 
   const outPath = path.join(DATA_DIR, 'leaderboard.json');

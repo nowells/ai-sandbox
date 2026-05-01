@@ -1,9 +1,11 @@
 name: FIRST LEGO leaderboard report
 
 # Scrapes the FIRST LEGO League World Championship leaderboard with Playwright
-# and produces a PDF report. Runs on every push/PR that touches the project,
-# manually via workflow_dispatch, and on a weekly schedule so the artifact
-# stays current while the championship is live.
+# and produces a PDF report. On pull requests the PDF is committed back to the
+# PR branch under reports/ and a sticky comment is posted/updated with a direct
+# link, so the report can be opened on a phone with one tap. Other triggers
+# (push to main, schedule, manual dispatch) just upload the PDF as a workflow
+# artifact.
 
 on:
   push:
@@ -12,6 +14,8 @@ on:
       - 'leaderboard-report/**'
       - '.github/workflows/leaderboard-report.yml'
   pull_request:
+    # Excluding reports/** prevents the bot's PDF commit from re-triggering the
+    # workflow, since the bot commit only touches files in that directory.
     paths:
       - 'leaderboard-report/**'
       - '.github/workflows/leaderboard-report.yml'
@@ -24,37 +28,107 @@ on:
   schedule:
     - cron: '0 13 * * 1' # Mondays 13:00 UTC
 
+# contents:write — commit the PDF back to the PR branch.
+# pull-requests:write — post / update the sticky PR comment.
+permissions:
+  contents: write
+  pull-requests: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: leaderboard-report
     steps:
       - uses: actions/checkout@v4
+        with:
+          # Need the branch ref (not the merge commit) so we can push back.
+          ref: ${{ github.event.pull_request.head.ref || github.ref }}
+          # Use the workflow token so subsequent push works.
+          persist-credentials: true
 
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: npm
-          cache-dependency-path: leaderboard-report/package.json
 
       - name: Install dependencies
+        working-directory: leaderboard-report
         run: npm install --no-audit --no-fund
 
       - name: Install Playwright browsers
+        working-directory: leaderboard-report
         run: npx playwright install --with-deps chromium
 
       - name: Scrape leaderboard
+        working-directory: leaderboard-report
         env:
           LEADERBOARD_URL: ${{ github.event.inputs.leaderboard_url }}
           HEADLESS: 'true'
         run: npm run scrape
 
       - name: Generate PDF report
+        working-directory: leaderboard-report
         run: npm run report
 
-      - name: Upload PDF + data
+      - name: Stage report files for PR
+        if: github.event_name == 'pull_request'
+        run: |
+          mkdir -p reports
+          cp leaderboard-report/output/leaderboard-report.pdf reports/leaderboard-report.pdf
+          cp leaderboard-report/output/report.html reports/leaderboard-report.html
+          cp leaderboard-report/data/leaderboard.json reports/leaderboard.json
+
+      - name: Commit report to PR branch
+        if: github.event_name == 'pull_request'
+        env:
+          BRANCH: ${{ github.event.pull_request.head.ref }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add reports/leaderboard-report.pdf reports/leaderboard-report.html reports/leaderboard.json
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+            exit 0
+          fi
+          # [skip ci] keeps GitHub Actions from re-running on this commit, even
+          # if the path filter ever changes.
+          git commit -m "Update leaderboard report artifacts [skip ci]"
+          git push origin "HEAD:${BRANCH}"
+
+      - name: Post / update sticky PR comment with direct link
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        env:
+          BRANCH: ${{ github.event.pull_request.head.ref }}
+        with:
+          script: |
+            const { owner, repo } = context.repo;
+            const pr = context.payload.pull_request.number;
+            const branch = process.env.BRANCH;
+            const blob = (p) => `https://github.com/${owner}/${repo}/blob/${branch}/${p}`;
+            const raw = (p) => `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/${p}`;
+            const marker = '<!-- leaderboard-report-comment -->';
+            const body = [
+              marker,
+              '### FIRST LEGO leaderboard report',
+              '',
+              `**[Open PDF](${raw('reports/leaderboard-report.pdf')})** · [view on GitHub](${blob('reports/leaderboard-report.pdf')}) · [HTML](${blob('reports/leaderboard-report.html')}) · [raw JSON](${blob('reports/leaderboard.json')})`,
+              '',
+              `_Updated ${new Date().toISOString()} from commit ${context.sha.slice(0, 7)}._`,
+            ].join('\n');
+
+            const { data: comments } = await github.rest.issues.listComments({
+              owner, repo, issue_number: pr, per_page: 100,
+            });
+            const existing = comments.find((c) => c.body && c.body.includes(marker));
+            if (existing) {
+              await github.rest.issues.updateComment({ owner, repo, comment_id: existing.id, body });
+            } else {
+              await github.rest.issues.createComment({ owner, repo, issue_number: pr, body });
+            }
+
+      - name: Upload PDF + data as artifact
+        # Keep artifacts for non-PR triggers (push to main, schedule, dispatch),
+        # where there's no branch to commit back to.
+        if: github.event_name != 'pull_request'
         uses: actions/upload-artifact@v4
         with:
           name: leaderboard-report
