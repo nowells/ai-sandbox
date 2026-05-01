@@ -37,6 +37,70 @@ function safeFilename(url) {
   return url.replace(/[^a-z0-9]+/gi, '_').slice(0, 180);
 }
 
+// JSON:API helpers --------------------------------------------------------
+// eventhub's leaderboard endpoint returns a JSON:API document
+// (`{jsonapi, data, included}`). Each ranking lives in `data[]` as
+// `{type, id, attributes:{rank, highScore, …}, relationships:{team:{data:{id}}}}`,
+// and team metadata (name, country, rookieYear) is on a separate `included[]`
+// resource of type `team`. We index every team-typed resource we ever see
+// across all captured responses, then join rankings to teams by id.
+
+function isJsonApiResource(node) {
+  return (
+    node && typeof node === 'object' && !Array.isArray(node) &&
+    typeof node.type === 'string' && node.id !== undefined &&
+    node.attributes && typeof node.attributes === 'object'
+  );
+}
+
+function buildTeamIndex(captured) {
+  const index = new Map(); // both 'team:<id>' and bare '<id>' keys
+  const visit = (node) => {
+    if (!node) return;
+    if (Array.isArray(node)) { for (const n of node) visit(n); return; }
+    if (typeof node !== 'object') return;
+    if (isJsonApiResource(node) && /team/i.test(node.type)) {
+      const attrs = node.attributes || {};
+      index.set(`team:${node.id}`, attrs);
+      // Also index by bare id so lookups work when the relationship doesn't
+      // round-trip the type name.
+      if (!index.has(node.id)) index.set(node.id, attrs);
+    }
+    for (const v of Object.values(node)) visit(v);
+  };
+  for (const { body } of captured) visit(body);
+  return index;
+}
+
+function extractJsonApiRows(captured, teamIndex) {
+  const rows = [];
+  for (const { body } of captured) {
+    if (!body || typeof body !== 'object') continue;
+    const data = body.data;
+    if (!Array.isArray(data)) continue;
+    for (const item of data) {
+      if (!isJsonApiResource(item)) continue;
+      const a = item.attributes;
+      const aLower = Object.keys(a).map((k) => k.toLowerCase());
+      const hasScore = aLower.some((k) => SCORE_KEYS.has(k));
+      if (!hasScore) continue;
+
+      // Resolve related team via JSON:API relationships, falling back to any
+      // id-shaped attribute that points at a known team.
+      const teamRel = item.relationships?.team?.data || item.relationships?.teams?.data;
+      let teamAttrs = {};
+      if (teamRel && teamRel.id) {
+        teamAttrs =
+          teamIndex.get(`team:${teamRel.id}`) ||
+          teamIndex.get(teamRel.id) ||
+          {};
+      }
+      rows.push({ ...teamAttrs, ...a });
+    }
+  }
+  return rows;
+}
+
 const TEAM_KEYS = new Set([
   'teamnumber', 'team_number', 'teamid', 'team_id', 'teamname', 'team_name',
   'teamnickname', 'team_nickname', 'nickname', 'number',
@@ -208,17 +272,29 @@ async function main() {
     .textContent()
     .catch(() => null);
 
-  // Pass 1: extract from captured JSON.
+  // Pass 1a: JSON:API path. eventhub returns `{jsonapi, data, included}`
+  // documents; each ranking in `data[]` joins to a team resource (in some
+  // `included[]` from this or another captured response) by id.
+  const teamIndex = buildTeamIndex(captured);
+  const jsonApiRaw = extractJsonApiRows(captured, teamIndex);
+
+  // Pass 1b: generic heuristic — covers flat or nested-team payload shapes
+  // that aren't strict JSON:API. Both passes feed into the same merge map.
   const rowsByTeam = new Map();
+  const ingest = (raw) => {
+    const norm = normalizeRow(raw);
+    const key = String(norm.teamNumber ?? norm.teamName ?? Math.random());
+    const existing = rowsByTeam.get(key) || {};
+    // Later rows can fill missing fields (e.g. country comes from a
+    // separate team-detail call).
+    rowsByTeam.set(key, {
+      ...existing,
+      ...Object.fromEntries(Object.entries(norm).filter(([, v]) => v !== undefined)),
+    });
+  };
+  for (const raw of jsonApiRaw) ingest(raw);
   for (const { body } of captured) {
-    for (const raw of findLeaderboardRows(body)) {
-      const norm = normalizeRow(raw);
-      const key = String(norm.teamNumber ?? norm.teamName ?? Math.random());
-      const existing = rowsByTeam.get(key) || {};
-      // merge — later rows can fill missing fields (e.g. country comes from a
-      // separate team-detail call).
-      rowsByTeam.set(key, { ...existing, ...Object.fromEntries(Object.entries(norm).filter(([, v]) => v !== undefined)) });
-    }
+    for (const raw of findLeaderboardRows(body)) ingest(raw);
   }
 
   let teams = [...rowsByTeam.values()];
@@ -255,6 +331,10 @@ async function main() {
     if (d.sampleRowKeys) console.log(`    sample row keys: ${JSON.stringify(d.sampleRowKeys)}`);
   }
 
+  console.log(
+    `JSON:API extractor matched ${jsonApiRaw.length} rows; team index size: ${teamIndex.size}.`,
+  );
+
   const out = {
     sourceUrl: LEADERBOARD_URL,
     scrapedAt: new Date().toISOString(),
@@ -262,7 +342,11 @@ async function main() {
     headerText,
     teamCount: teams.length,
     teams,
-    diagnostics,
+    diagnostics: {
+      capturedResponses: diagnostics,
+      jsonApiRowsFound: jsonApiRaw.length,
+      teamIndexSize: teamIndex.size,
+    },
   };
 
   const outPath = path.join(DATA_DIR, 'leaderboard.json');
