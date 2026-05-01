@@ -1,8 +1,8 @@
 # FIRST LEGO leaderboard report
 
 Pulls the FIRST LEGO League World Championship leaderboard with Playwright and
-renders a PDF report that pairs each team's score with its country and team age,
-so you can read off whether older European teams routinely score higher.
+renders a PDF report that pairs each team's score with its country and team
+age, so you can read off whether older European teams routinely score higher.
 
 Default source:
 <https://eventhub.firstinspires.org/leaderboard/648a05f7-ee85-4744-bdd7-62d4b4f21c3a/87b8c427-18e0-4bb9-bf66-2f26f4b20057>
