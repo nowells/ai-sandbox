@@ -1,0 +1,15 @@
+{
+  "name": "first-lego-leaderboard-report",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Scrapes the FIRST LEGO League World Championship leaderboard with Playwright and generates a PDF report comparing team scores by country and team age.",
+  "type": "module",
+  "scripts": {
+    "scrape": "node src/scrape.js",
+    "report": "node src/generate-report.js",
+    "all": "node src/scrape.js && node src/generate-report.js"
+  },
+  "dependencies": {
+    "playwright": "^1.47.0"
+  }
+}
