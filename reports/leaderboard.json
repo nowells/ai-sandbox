@@ -1,0 +1,77 @@
+{
+  "sourceUrl": "https://eventhub.firstinspires.org/leaderboard/648a05f7-ee85-4744-bdd7-62d4b4f21c3a/87b8c427-18e0-4bb9-bf66-2f26f4b20057",
+  "scrapedAt": "2026-05-01T03:17:22.797Z",
+  "pageTitle": "FIRST Event Hub",
+  "headerText": null,
+  "teamCount": 0,
+  "teams": [],
+  "diagnostics": [
+    {
+      "url": "https://eventhub.firstinspires.org/config.json",
+      "topKeys": [
+        "REACT_APP_AUTH_DOMAIN",
+        "REACT_APP_AUTH_CLIENT_ID",
+        "REACT_APP_AUTH_REDIRECT_URI",
+        "REACT_APP_AUTH_AUDIENCE",
+        "REACT_APP_GOOGLE_AUTH_REDIRECT_URI",
+        "REACT_APP_API_BASE_URL",
+        "REACT_APP_IS_STAGING_ENV",
+        "REACT_APP_UPLOAD_API_BASE_URL",
+        "REACT_APP_ENVIRONMENT"
+      ],
+      "sampleRowKeys": null,
+      "isArray": false
+    },
+    {
+      "url": "https://eventhub.firstinspires.org/config.json",
+      "topKeys": [
+        "REACT_APP_AUTH_DOMAIN",
+        "REACT_APP_AUTH_CLIENT_ID",
+        "REACT_APP_AUTH_REDIRECT_URI",
+        "REACT_APP_AUTH_AUDIENCE",
+        "REACT_APP_GOOGLE_AUTH_REDIRECT_URI",
+        "REACT_APP_API_BASE_URL",
+        "REACT_APP_IS_STAGING_ENV",
+        "REACT_APP_UPLOAD_API_BASE_URL",
+        "REACT_APP_ENVIRONMENT"
+      ],
+      "sampleRowKeys": null,
+      "isArray": false
+    },
+    {
+      "url": "https://o4504610903097344.ingest.sentry.io/api/4504610919874560/envelope/?sentry_key=942bbbb34e544421911312c24d90311c&sentry_version=7",
+      "topKeys": [],
+      "sampleRowKeys": null,
+      "isArray": false
+    },
+    {
+      "url": "https://o76fno8oxh.execute-api.eu-central-1.amazonaws.com/api/leaderboard/87b8c427-18e0-4bb9-bf66-2f26f4b20057/rankings",
+      "topKeys": [
+        "jsonapi",
+        "data"
+      ],
+      "sampleRowKeys": null,
+      "isArray": false
+    },
+    {
+      "url": "https://o76fno8oxh.execute-api.eu-central-1.amazonaws.com/api/events/648a05f7-ee85-4744-bdd7-62d4b4f21c3a",
+      "topKeys": [
+        "jsonapi",
+        "data",
+        "included"
+      ],
+      "sampleRowKeys": null,
+      "isArray": false
+    },
+    {
+      "url": "https://o76fno8oxh.execute-api.eu-central-1.amazonaws.com/api/schedules/0f640728-e1cb-441f-b36d-a91057e6486a/public_sponsors",
+      "topKeys": [
+        "jsonapi",
+        "meta",
+        "data"
+      ],
+      "sampleRowKeys": null,
+      "isArray": false
+    }
+  ]
+}
